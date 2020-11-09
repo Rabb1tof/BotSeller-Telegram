@@ -1,2 +1,0 @@
-# BotSeller-Telegram
- 

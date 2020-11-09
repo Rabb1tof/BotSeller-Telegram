@@ -206,7 +206,7 @@ FakesAssemblies/
 *.opt
 
 # Settings for different environments
-#*/appsettings.json
+*/appsettings.json
 */appsettings.*.json
 
 # Documentation project

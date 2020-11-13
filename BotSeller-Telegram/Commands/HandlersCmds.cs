@@ -37,12 +37,15 @@ namespace BotSeller_Telegram.Commands
         {
             var message = HtmlString.Empty;
             var productList = await _dbContext.ProductProps.Where(x => x.Owner.Id == From.Id).OrderBy(x => x.Id).ToArrayAsync();
-             foreach (var product in productList)
-             {
-                 message.Code($"{product.Id}. {product.Name}\n\n{product.Desc}\n\nPrice: {product.Price}\nAuthor @{product.Owner.Username}");
-             }
+            if (productList.Length == 0)
+                return;
+            foreach (var product in productList)
+            {
+                message.Code(
+                    $"{product.Id}. {product.Name}\n\n{product.Desc}\n\nPrice: {product.Price}\nAuthor @{product.Owner.Username}");
+            }
 
-             await Bot.SendHtmlStringAsync(Chat, message);
+            await Bot.SendHtmlStringAsync(Chat, message);
         }
 
         [Command(InChat.All, "addProduct", CommandParseMode.Both)]
@@ -86,8 +89,10 @@ namespace BotSeller_Telegram.Commands
                     Price = price
                 });
                 //_dbContext.UserProps.Find()
-            }
 
+                var userProps = await _dbContext.UserProps.FirstOrDefaultAsync(x => x.Id == From.Id);
+                ++userProps.ProductCount;
+            }
 
             await _dbContext.SaveChangesAsync();
         }
